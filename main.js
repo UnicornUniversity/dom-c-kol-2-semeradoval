@@ -1,35 +1,64 @@
 //TODO add imports if needed
 //import { exMain } from "./exclude/exampleAss2.js"
-//TODO add/change doc as needed
+
 /**
- * TODO - Write functional code for this application. You can call any other function, but usage of ".toString(numberSystem)" and "Number.parseInt(number, numberSystem)" is forbidden (only permitted when used on individual digits).
- * The main function which calls the application. 
- * TODO - Please, add specific description here for the application purpose.
- * @param {string} inputNumber number that is being converted
- * @param {number} inputNumberSystem numerical system that the inputNumber is being converted from
- * @param {number} outputNumberSystem numerical system that the inputNumber is being converted into
- * @returns {string} containing number converted to output system
+ * Převod čísla z desítkové soustavy na dvojkovou podle JSP
+ * Nepoužívá toString, parseInt ani charCodeAt
+ * @param {string} inputNumber číslo v desítkové soustavě jako řetězec
+ * @param {number} inputNumberSystem povolená vstupní soustava (10)
+ * @param {number} outputNumberSystem povolená výstupní soustava (2)
+ * @returns {string} číslo převedené do dvojkové soustavy
  */
 export function main(inputNumber, inputNumberSystem, outputNumberSystem) {
-  //TODO code
-  //let dtoOut = exMain(inputNumber, inputNumberSystem, outputNumberSystem);
-  return dtoOut;
+    // 2.1 Vytvoření "souboru" pro data výstupu
+    const outputDataFile = [];
+
+    // 2.2 Zkontroluj funkci: vstup musí být číslo
+    const digitMap = { '0':0, '1':1, '2':2, '3':3, '4':4, '5':5, '6':6, '7':7, '8':8, '9':9 };
+    let number = 0;
+    for (let i = 0; i < inputNumber.length; i++) {
+        const digit = inputNumber[i];
+        if (!(digit in digitMap)) {
+            return 'error'; // 3.B.1
+        }
+        number = number * 10 + digitMap[digit];
+    }
+
+    // 3.A If číslo = 0
+    if (number === 0) {
+        return '0'; // 3.A.1
+    }
+
+    // 3.C Else If číslo ≠ 0
+    while (number > 0) { // 3.C.2.2 Iterace
+        const remainder = number % 2; // 3.C.2.2.1
+        outputDataFile.push(remainder); // 3.C.2.2.2 Zápis do "souboru"
+        number = (number - remainder) / 2; // 3.C.2.2.3 Podíl pro další iteraci
+    }
+
+    // 3.C.2.3 Čtení z "souboru" zprava doleva
+    let outputNumber = '';
+    for (let i = outputDataFile.length - 1; i >= 0; i--) {
+        outputNumber += outputDataFile[i]; // 3.C.2.4 Předej přečtené číslo do výstupu
+    }
+
+    // 4.2 Smazání souboru pro data výstupu
+    outputDataFile.length = 0;
+
+    return outputNumber; // 4.1 Výstup
 }
 
 /**
- * TODO - Change this to contain all input number systems that your application can convert from.
- * Function which returns which number systems are permitted on input.
- * @returns {Array} array of numbers refering to permitted input systems
+ * Povolené vstupní soustavy
  */
 export function permittedInputSystems() {
-	return [10, 2];
+    return [10];
 }
 
 /**
- * TODO - Change this to contain all output number systems that your application can convert to.
- * Function which returns which number systems are permitted on output.
- * @returns {Array} array of numbers refering to permitted output systems
+ * Povolené výstupní soustavy
  */
 export function permittedOutputSystems() {
-	return [10, 2];
+    return [2];
 }
+//console.log(main("10"))
